@@ -27,7 +27,6 @@ export default function Portfolio() {
 
   const dockApps = [
     { icon: Briefcase, gradient: 'bg-gradient-to-br from-blue-500 to-blue-700', id: 'projects' },
-    { icon: User, gradient: 'bg-gradient-to-br from-purple-500 to-purple-700', id: 'about' },
     { icon: Mail, gradient: 'bg-gradient-to-br from-green-500 to-green-700', id: 'contact' },
   ];
 
@@ -36,22 +35,22 @@ export default function Portfolio() {
       {/* Animated Background */}
       <motion.div
         style={{ y: backgroundY }}
-        className="fixed inset-0 bg-linear-to-br from-slate-900 via-indigo-900 to-purple-900 -z-10"
+        className="fixed inset-0 bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 -z-10"
       >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20" />
       </motion.div>
 
       {/* Home Screen */}
-      <div className="min-h-screen flex flex-col justify-between px-6 pt-8 pb-12 md:px-12">
+      <div className="min-h-screen flex flex-col justify-between px-6 pt-8 pb-32 md:px-12">
         <div className="max-w-md mx-auto w-full">
           {/* Widgets Row */}
-         <div className="grid grid-cols-2 gap-4 mb-4">
-  <div className="space-y-4">
-    <TimeWidget />
-    <StatsWidget />
-  </div>
-  <CalendarWidget />
-</div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="space-y-4">
+              <TimeWidget />
+              <StatsWidget />
+            </div>
+            <CalendarWidget />
+          </div>
 
           {/* Weather Widget */}
           <div className="mb-8">
@@ -59,7 +58,7 @@ export default function Portfolio() {
           </div>
 
           {/* App Grid */}
-          <div className="grid grid-cols-4 gap-6 mb-32">
+          <div className="grid grid-cols-4 gap-6">
             {apps.map((app, index) => (
               <AppIcon
                 key={index}
@@ -72,17 +71,27 @@ export default function Portfolio() {
             ))}
           </div>
         </div>
-
-        {/* Dock */}
-        <Dock apps={dockApps} />
       </div>
 
+      {/* Dock - Fixed at bottom */}
+      <Dock apps={dockApps} />
+
       {/* All Sections */}
-      <Projects />
-      <About />
-      <Skills />
-      <Resume />
-      <Contact />
+      <div id="projects">
+        <Projects />
+      </div>
+      <div id="about">
+        <About />
+      </div>
+      <div id="skills">
+        <Skills />
+      </div>
+      <div id="resume">
+        <Resume />
+      </div>
+      <div id="contact">
+        <Contact />
+      </div>
     </div>
   );
 }

@@ -395,7 +395,7 @@ export function CalendarWidget() {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl"
+      className="backdrop-blur-2xl bg-white/10 rounded-3xl pt-3 pb-1 px-3 border border-white/20 shadow-2xl"
     >
       <div className="text-xs text-white/70 font-medium mb-2 uppercase tracking-wider">
         {currentMonth}
