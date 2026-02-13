@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
-  Briefcase, User, FileText, Mail, Wrench, Github, Linkedin, Sun, MapPin
+  Briefcase, User, FileText, Mail, Wrench, Github, Linkedin, Sun, MapPin, Cloud, CloudRain, Wind, Droplets, Eye
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -50,8 +50,122 @@ const TimeWidget = () => {
   );
 };
 
-// Weather Widget
+// Weather Widget - Real Weather Data
+interface WeatherData {
+  temp: number;
+  condition: string;
+  humidity: number;
+  windSpeed: number;
+  visibility: number;
+  feelsLike: number;
+  location: string;
+  highTemp: number;
+  lowTemp: number;
+  icon: string;
+  loading: boolean;
+  error: string | null;
+}
+
 const WeatherWidget = () => {
+  const [weather, setWeather] = useState<WeatherData>({
+    temp: 0,
+    condition: 'Loading...',
+    humidity: 0,
+    windSpeed: 0,
+    visibility: 0,
+    feelsLike: 0,
+    location: 'Fetching location...',
+    highTemp: 0,
+    lowTemp: 0,
+    icon: 'sun',
+    loading: true,
+    error: null,
+  });
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        // Get user's location
+        const geoPosition = await new Promise<GeolocationCoordinates>(
+          (resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+              (position) => resolve(position.coords),
+              (error) => reject(error)
+            );
+          }
+        );
+
+        const { latitude, longitude } = geoPosition;
+
+        // Fetch weather data from Open-Meteo API (free, no key required)
+        const weatherResponse = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`
+        );
+        
+        if (!weatherResponse.ok) {
+          throw new Error('Weather data fetch failed');
+        }
+
+        const weatherData = await weatherResponse.json();
+
+        // Get location name using reverse geocoding (using open-meteo or alternative)
+        const geoResponse = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        
+        let locationName = 'Your Location';
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          locationName = geoData.address?.city || geoData.address?.county || 'Your Location';
+        }
+
+        const current = weatherData.current;
+        const daily = weatherData.daily;
+
+        // Convert WMO weather code to description
+        const weatherDescription = getWeatherDescription(current.weather_code);
+        const weatherIcon = getWeatherIcon(current.weather_code);
+
+        setWeather({
+          temp: Math.round(current.temperature_2m),
+          condition: weatherDescription,
+          humidity: current.relative_humidity_2m,
+          windSpeed: Math.round(current.wind_speed_10m),
+          visibility: (current.visibility / 1000).toFixed(1),
+          feelsLike: Math.round(current.apparent_temperature),
+          location: locationName,
+          highTemp: Math.round(daily.temperature_2m_max[0]),
+          lowTemp: Math.round(daily.temperature_2m_min[0]),
+          icon: weatherIcon,
+          loading: false,
+          error: null,
+        });
+      } catch (err) {
+        setWeather((prev) => ({
+          ...prev,
+          loading: false,
+          error: 'Unable to fetch weather. Please enable location access.',
+          location: 'Location not available',
+        }));
+        console.error('Weather fetch error:', err);
+      }
+    };
+
+    fetchWeather();
+  }, []);
+
+  const getWeatherIconComponent = () => {
+    switch (weather.icon) {
+      case 'rain':
+        return <CloudRain className="w-8 h-8" />;
+      case 'cloud':
+        return <Cloud className="w-8 h-8" />;
+      case 'sun':
+      default:
+        return <Sun className="w-8 h-8" />;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -59,27 +173,84 @@ const WeatherWidget = () => {
       transition={{ duration: 0.6, delay: 0.4 }}
       className="backdrop-blur-2xl bg-white/10 rounded-3xl p-4 border border-white/20 shadow-2xl col-span-2"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="text-white/90">
-            <Sun className="w-8 h-8" />
+      {weather.error ? (
+        <div className="text-white/60 text-sm font-light">{weather.error}</div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="text-white/90">
+              {getWeatherIconComponent()}
+            </div>
+            <div>
+              <div className="text-2xl font-extralight text-white">
+                {weather.temp}°
+              </div>
+              <div className="text-xs text-white/60 font-light">
+                {weather.condition}
+              </div>
+              <div className="text-xs text-white/50 font-light mt-1">
+                Feels like {weather.feelsLike}°
+              </div>
+            </div>
           </div>
-          <div>
-            <div className="text-2xl font-extralight text-white">72°</div>
-            <div className="text-xs text-white/60 font-light">Partly Cloudy</div>
+          <div className="text-right">
+            <div className="flex items-center gap-1 text-white/70 text-xs mb-2">
+              <MapPin className="w-3 h-3" />
+              <span className="font-light">{weather.location}</span>
+            </div>
+            <div className="text-xs text-white/50 font-light mb-2">
+              H:{weather.highTemp}° L:{weather.lowTemp}°
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="flex items-center gap-1">
+                <Droplets className="w-3 h-3 text-white/50" />
+                <span className="text-white/50">{weather.humidity}%</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Wind className="w-3 h-3 text-white/50" />
+                <span className="text-white/50">{weather.windSpeed} km/h</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye className="w-3 h-3 text-white/50" />
+                <span className="text-white/50">{weather.visibility} km</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="flex items-center gap-1 text-white/70 text-xs mb-1">
-            <MapPin className="w-3 h-3" />
-            <span className="font-light">San Francisco</span>
-          </div>
-          <div className="text-xs text-white/50 font-light">H:75° L:65°</div>
-        </div>
-      </div>
+      )}
     </motion.div>
   );
 };
+
+// Helper function to convert WMO weather codes to descriptions
+function getWeatherDescription(code: number): string {
+  if (code === 0) return 'Clear Sky';
+  if (code === 1 || code === 2) return 'Mostly Clear';
+  if (code === 3) return 'Overcast';
+  if (code === 45 || code === 48) return 'Foggy';
+  if (code === 51 || code === 53 || code === 55) return 'Light Drizzle';
+  if (code === 61 || code === 63 || code === 65) return 'Rainy';
+  if (code === 71 || code === 73 || code === 75) return 'Snowy';
+  if (code === 77) return 'Snow Grains';
+  if (code === 80 || code === 81 || code === 82) return 'Rain Showers';
+  if (code === 85 || code === 86) return 'Snow Showers';
+  if (code === 95 || code === 96 || code === 99) return 'Thunderstorm';
+  return 'Cloudy';
+}
+
+// Helper function to get weather icon type
+function getWeatherIcon(code: number): string {
+  if (code === 0 || code === 1 || code === 2) return 'sun';
+  if (code === 3 || code === 45 || code === 48) return 'cloud';
+  if (
+    code === 51 || code === 53 || code === 55 ||
+    code === 61 || code === 63 || code === 65 ||
+    code === 80 || code === 81 || code === 82 ||
+    code === 95 || code === 96 || code === 99
+  ) return 'rain';
+  if (code === 71 || code === 73 || code === 75 || code === 77 || code === 85 || code === 86) return 'snow';
+  return 'cloud';
+}
 
 // Calendar Widget
 const CalendarWidget = () => {
@@ -185,13 +356,13 @@ const AppIcon = ({ icon: Icon, label, gradient, delay, onClick, id }: {
       <button
         ref={iconRef}
         onClick={handleClick}
-        className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl ${gradient} 
+        className={`w-13 h-13 md:w-20 md:h-20 rounded-2xl ${gradient} 
                    shadow-xl hover:shadow-2xl transition-all duration-300
                    active:scale-95 flex items-center justify-center
                    border border-white/20 relative overflow-hidden group`}
       >
         <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <Icon className="w-8 h-8 md:w-10 md:h-10 text-white relative z-10" strokeWidth={1.5} />
+        <Icon className="w-7 h-7 md:w-10 md:h-10 text-white relative z-10" strokeWidth={1.5} />
       </button>
       <span className="text-xs md:text-sm text-white font-light tracking-wide">
         {label}
@@ -223,12 +394,12 @@ const Dock = ({ apps }: { apps: Array<{ icon: any; gradient: string; id: string 
                   ease: "power3.inOut"
                 });
               }}
-              className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl ${app.gradient} 
+              className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl ${app.gradient} 
                          shadow-xl flex items-center justify-center
                          border border-white/20 relative overflow-hidden`}
             >
               <div className="absolute inset-0 bg-linear-to-br from-white/20 to-transparent" />
-              <app.icon className="w-7 h-7 md:w-8 md:h-8 text-white relative z-10" strokeWidth={1.5} />
+              <app.icon className="w-6 h-6 md:w-8 md:h-8 text-white relative z-10" strokeWidth={1.5} />
             </motion.button>
           ))}
         </div>
