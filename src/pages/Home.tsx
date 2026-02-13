@@ -38,12 +38,12 @@ const TimeWidget = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-4 border border-white/20 shadow-2xl"
+      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl"
     >
-      <div className="text-5xl font-extralight text-white tracking-tight mb-1">
+      <div className="text-3xl font-extralight text-white tracking-tight mb-0.5">
         {formatTime(time)}
       </div>
-      <div className="text-sm text-white/70 font-light">
+      <div className="text-xs text-white/70 font-light">
         {formatDate(time)}
       </div>
     </motion.div>
@@ -131,7 +131,7 @@ const WeatherWidget = () => {
           condition: weatherDescription,
           humidity: current.relative_humidity_2m,
           windSpeed: Math.round(current.wind_speed_10m),
-          visibility: (current.visibility / 1000).toFixed(1),
+          visibility: Math.round(current.visibility / 1000 * 10) / 10,
           feelsLike: Math.round(current.apparent_temperature),
           location: locationName,
           highTemp: Math.round(daily.temperature_2m_max[0]),
@@ -157,12 +157,12 @@ const WeatherWidget = () => {
   const getWeatherIconComponent = () => {
     switch (weather.icon) {
       case 'rain':
-        return <CloudRain className="w-8 h-8" />;
+        return <CloudRain className="w-6 h-6" />;
       case 'cloud':
-        return <Cloud className="w-8 h-8" />;
+        return <Cloud className="w-6 h-6" />;
       case 'sun':
       default:
-        return <Sun className="w-8 h-8" />;
+        return <Sun className="w-6 h-6" />;
     }
   };
 
@@ -171,13 +171,13 @@ const WeatherWidget = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-4 border border-white/20 shadow-2xl col-span-2"
+      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl col-span-2"
     >
       {weather.error ? (
         <div className="text-white/60 text-sm font-light">{weather.error}</div>
       ) : (
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <div className="text-white/90">
               {getWeatherIconComponent()}
             </div>
@@ -188,17 +188,17 @@ const WeatherWidget = () => {
               <div className="text-xs text-white/60 font-light">
                 {weather.condition}
               </div>
-              <div className="text-xs text-white/50 font-light mt-1">
+              <div className="text-xs text-white/50 font-light mt-0.5">
                 Feels like {weather.feelsLike}°
               </div>
             </div>
           </div>
           <div className="text-right">
-            <div className="flex items-center gap-1 text-white/70 text-xs mb-2">
+            <div className="flex items-center gap-1 text-white/70 text-xs mb-1.5">
               <MapPin className="w-3 h-3" />
               <span className="font-light">{weather.location}</span>
             </div>
-            <div className="text-xs text-white/50 font-light mb-2">
+            <div className="text-xs text-white/50 font-light mb-1.5">
               H:{weather.highTemp}° L:{weather.lowTemp}°
             </div>
             <div className="grid grid-cols-3 gap-2 text-xs">
@@ -281,21 +281,21 @@ const CalendarWidget = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-4 border border-white/20 shadow-2xl"
+      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl"
     >
-      <div className="text-xs text-white/70 font-medium mb-3 uppercase tracking-wider">
+      <div className="text-xs text-white/70 font-medium mb-2 uppercase tracking-wider">
         {currentMonth}
       </div>
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5">
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-          <div key={i} className="text-center text-xs text-white/50 font-light mb-1">
+          <div key={i} className="text-center text-[10px] text-white/50 font-light mb-0.5">
             {day}
           </div>
         ))}
         {days.map((day, i) => (
           <div
             key={i}
-            className={`text-center text-xs py-1 rounded-lg transition-all ${
+            className={`text-center text-[10px] py-0.5 rounded-lg transition-all ${
               day === currentDay
                 ? 'bg-white text-slate-900 font-semibold'
                 : day
