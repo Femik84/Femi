@@ -83,9 +83,17 @@ export function AppIcon({ icon: Icon, label, gradient, delay, onClick, id }: App
   </div>
 </button>
 
-      <span className="text-xs md:text-sm text-white font-light tracking-wide">
-        {label}
-      </span>
+   <span className="text-xs md:text-sm text-white font-light tracking-wide text-center">
+  {id === "about" ? (
+    <>
+      <span className="min-[331px]:hidden">About</span>
+      <span className="hidden min-[331px]:inline">About Me</span>
+    </>
+  ) : (
+    label
+  )}
+</span>
+
     </motion.div>
   );
 }
@@ -193,14 +201,14 @@ export function Dock({ apps }: DockProps) {
               type: "spring", 
               stiffness: 400, 
               damping: 17,
-              delay: 0.7
+              delay: 0.3
             }}
             onClick={handleHomeClick}
             className="relative group"
           >
-            <div className="p-2 rounded-4xl bg-white/10 backdrop-blur-xl border border-white/20 inline-flex shadow-2xl">
+            <div className="p-2 rounded-4xl md:rounded-[50px] bg-white/10 backdrop-blur-xl border border-white/20 inline-flex shadow-2xl">
               <div
-                className="w-12 h-12 md:w-16 md:h-16 rounded-3xl 
+                className="w-12 h-12 md:w-15 md:h-15 rounded-3xl md:rounded-[40px]
                            bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500
                            shadow-2xl flex items-center justify-center
                            border border-white/30 relative overflow-hidden"
@@ -236,7 +244,7 @@ export function Dock({ apps }: DockProps) {
             >
               <div className="p-1.5 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
                 <div
-                  className={`w-9 h-9 md:w-12 md:h-12 rounded-2xl ${apps[0].gradient}
+                  className={`w-9 h-9 md:w-11 md:h-11 md:rounded-4xl rounded-2xl ${apps[0].gradient}
                     shadow-md flex items-center justify-center
                     border border-white/20 relative overflow-hidden`}
                 >
@@ -263,7 +271,7 @@ export function Dock({ apps }: DockProps) {
             >
               <div className="p-1.5 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
                 <div
-                  className={`w-9 h-9 md:w-12 md:h-12 rounded-2xl ${apps[1].gradient}
+                  className={`w-9 h-9 md:w-11 md:h-11 md:rounded-4xl rounded-2xl ${apps[1].gradient}
                     shadow-md flex items-center justify-center
                     border border-white/20 relative overflow-hidden`}
                 >

@@ -101,7 +101,7 @@ export function StatsWidget() {
       transition={{ duration: 0.6, delay: 0.25 }}
       className="backdrop-blur-2xl bg-white/10 rounded-3xl p-2.5 border border-white/20 shadow-2xl"
     >
-      <div className="text-[10px] text-white/70 font-medium mb-2 uppercase tracking-wider">
+      <div className="text-[10px] relative left-2 text-white/70 font-medium mb-2 uppercase tracking-wider">
         Quick Stats
       </div>
 
@@ -271,7 +271,7 @@ export function WeatherWidget() {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl col-span-2"
+      className="backdrop-blur-2xl bg-white/10 rounded-3xl p-3 border border-white/20 shadow-2xl col-span-2 md:col-span-1"
     >
       {weather.error ? (
         <div className="text-white/60 text-sm font-light">{weather.error}</div>
