@@ -105,17 +105,20 @@ export function Dock({ apps }: DockProps) {
     
     const tl = gsap.timeline();
     tl.to(homeRef.current, {
-      scale: 0.8,
-      duration: 0.15,
-      ease: "power2.in"
+      y: -30,
+      rotation: 5,
+      duration: 0.3,
+      ease: "back.out(2)"
     }).to(homeRef.current, {
-      scale: 1.3,
-      duration: 0.2,
-      ease: "power2.out"
-    }).to(homeRef.current, {
-      scale: 1,
+      y: -35,
+      rotation: -3,
       duration: 0.15,
-      ease: "elastic.out(1.5, 0.5)",
+      ease: "power1.inOut"
+    }).to(homeRef.current, {
+      y: 0,
+      rotation: 0,
+      duration: 0.4,
+      ease: "elastic.out(1, 0.6)",
       onComplete: () => {
         gsap.to(window, {
           duration: 1.2,
@@ -183,7 +186,7 @@ export function Dock({ apps }: DockProps) {
           <motion.button
             ref={homeRef}
             whileHover={{ scale: 1.15, y: -8 }}
-            whileTap={{ scale: 0.9 }}
+            whileTap={{ scale: 0.95 }}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ 
@@ -211,8 +214,7 @@ export function Dock({ apps }: DockProps) {
               </div>
             </div>
 
-            {/* Glow effects */}
-            <div className="absolute inset-0 rounded-[1.4rem] bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 opacity-0 group-hover:opacity-70 blur-xl transition-opacity duration-300 -z-10" />
+            {/* Ambient glow (no hover effect) */}
             <div className="absolute inset-0 rounded-[1.4rem] bg-gradient-to-br from-indigo-400/40 via-purple-400/40 to-pink-400/40 opacity-60 blur-lg -z-10 animate-pulse" />
             
             {/* Connecting line to dock */}
