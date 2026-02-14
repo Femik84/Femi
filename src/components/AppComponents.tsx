@@ -232,15 +232,15 @@ export function Dock({ apps }: DockProps) {
               onClick={handleFirstAppClick}
               className="relative group"
             >
-              <div className="p-2 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
+              <div className="p-1.5 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
                 <div
-                  className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl ${apps[0].gradient}
+                  className={`w-9 h-9 md:w-12 md:h-12 rounded-2xl ${apps[0].gradient}
                     shadow-md flex items-center justify-center
                     border border-white/20 relative overflow-hidden`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <FirstIcon
-                    className="w-6.5 h-6.5 md:w-7 md:h-7 text-white relative z-10"
+                    className="w-6 h-6 md:w-7 md:h-7 text-white relative z-10"
                     strokeWidth={2}
                   />
                 </div>
@@ -259,7 +259,7 @@ export function Dock({ apps }: DockProps) {
               onClick={handleSecondAppClick}
               className="relative group"
             >
-              <div className="p-2 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
+              <div className="p-1.5 rounded-4xl bg-white/5 backdrop-blur-md border border-white/10 inline-flex">
                 <div
                   className={`w-9 h-9 md:w-12 md:h-12 rounded-2xl ${apps[1].gradient}
                     shadow-md flex items-center justify-center
