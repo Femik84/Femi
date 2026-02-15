@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Github, Twitter, Linkedin, Send, X } from 'lucide-react';
+import { Mail, Github, Linkedin, Send, X } from 'lucide-react';
 import { Section } from './Section';
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
@@ -120,7 +120,7 @@ export default function Contact() {
           <h3 className="text-3xl md:text-5xl font-light text-white mb-3 tracking-wide">
             Let's Connect
           </h3>
-          <div className="w-20 h-1 bg-gradient-to-r from-orange-500 to-white mx-auto rounded-full"></div>
+          <div className="w-20 h-1 bg-linear-to-r from-orange-500 to-white mx-auto rounded-full"></div>
         </motion.div>
 
         {/* Contact Form */}
